@@ -1,59 +1,85 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'
+import { writeToInfluxDB } from './influx'
 
-async function publishEvent(event: Object): Promise<void> {
-	// Since this request will send JSON data in the body,
-	// we need to set the `Content-Type` header to `application/json`
-	const headers: Headers = new Headers()
-	headers.set('Content-Type', 'application/json')
-	// We also need to set the `Accept` header to `application/json`
-	// to tell the server that we expect JSON in response
-	headers.set('Accept', 'application/json')
+let nextId = 1
+let uri2Id: { [key: string]: number } = {}
 
-	const request = new Request('https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry', {
-		// We need to set the `method` to `POST` and assign the headers
-		method: 'POST',
-		headers: headers,
-		// Convert the user object to JSON and pass it as the body
-		body: JSON.stringify(event)
-	})
-
-	// Send the request and print the response
-	return fetch(request)
-		.then(res => {
-			console.log("got response:", res)
-		})
+function getId(uri: string) {
+	if (!uri2Id.hasOwnProperty(uri)) uri2Id[uri] = nextId++
+	return uri2Id[uri]
 }
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+function sendDoc(document: vscode.TextDocument, megaphone?: vscode.StatusBarItem) {
+	if (document.uri.scheme === 'output') {
+		return;
+	}
+	const uri = document.uri.toString()
+	const id = getId(uri)
+	const doc = document.getText()
+
+	if (megaphone) {
+		megaphone.text = `$(megaphone) Document ${id} (${uri}) Open: ${doc.split('\n')[0]}`
+	}
+
+	writeToInfluxDB('doc', doc, id.toString())
+}
+
+function sendDocChange(event: vscode.TextDocumentChangeEvent, megaphone: vscode.StatusBarItem) {
+	const id = getId(event.document.uri.toString())
+
+	// for dashboard
+	// To mirror the content of a document using change events use the following
+	// approach:
+	// - start with the same initial content
+	// - apply the 'textDocument/didChange' notifications in the order you
+	// 	 receive them.
+	// - apply the `TextDocumentContentChangeEvent`s in a single notification
+	//   in the order you receive them.
+	writeToInfluxDB('docChange', event.contentChanges.toString(), id.toString())
+
+	// local log, not for dashboard
+	if (event.document.uri.scheme === 'output') {
+		return; // To avoid logging output panel content
+	}
+	if (event.contentChanges.length === 0) {
+		megaphone.text = (`$(megaphone) Document ${id} Save`)
+	}
+	event.contentChanges.forEach((change) => {
+		if (change && change.hasOwnProperty('text')) {
+			const { text, range } = change
+			if (range.start.isEqual(range.end)) {
+				megaphone.text = `$(megaphone) Document ${id} Add: ${text}`
+			} else if (text === '') {
+				megaphone.text = `$(megaphone) Document ${id} Delete`
+			} else {
+				megaphone.text = `$(megaphone) Document ${id} Replace: ${text}`
+			}
+		}
+	})
+}
+
 export function activate(context: vscode.ExtensionContext) {
+	console.log('Extension "telemetry" is now active')
+	console.log(`sessionId: ${vscode.env.sessionId}`)
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "telemetry" is now active!');
+	// megaphone on status bar
+	let megaphone = vscode.window.createStatusBarItem(
+		vscode.StatusBarAlignment.Right,
+		100
+	)
+	megaphone.text = `$(megaphone) telemetry extension activated`
+	megaphone.show()
+	context.subscriptions.push(megaphone)
 
-	// // The command has been defined in the package.json file
-	// // Now provide the implementation of the command with registerCommand
-	// // The commandId parameter must match the command field in package.json
-	// let disposable = vscode.commands.registerCommand('telemetry.helloWorld', () => {
-	// 	// The code you place here will be executed every time your command is executed
-	// 	// Display a message box to the user
-	// 	vscode.window.showInformationMessage('Hello World from telemetry!');
-	// });
+	// send all text documents currently known to the editor
+	vscode.workspace.textDocuments.forEach((doc) => sendDoc(doc))
 
-	// context.subscriptions.push(disposable);
-
-	vscode.workspace.onDidChangeTextDocument(async (e) => {
-		vscode.window.showInformationMessage('onDidChangeTextDocument')
-
-		publishEvent(e)
-			.then(() => {
-				vscode.window.showInformationMessage("Event Published!")
-			})
-	})
+	context.subscriptions.push(
+		// text document open listener: send entire text document content & update megaphone
+		vscode.workspace.onDidOpenTextDocument((doc) => sendDoc(doc, megaphone)),
+		// text document change listener: send change sets & update megaphone
+		vscode.workspace.onDidChangeTextDocument((e: vscode.TextDocumentChangeEvent) => sendDocChange(e, megaphone))
+	)
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
