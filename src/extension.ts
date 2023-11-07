@@ -41,36 +41,38 @@ function sendDocChange(
 
   const id = getId(event.document.uri.toString());
 
-  // For dashboard
-  // To mirror the content of a document using change events use the following
-  // approach:
-  // - start with the same initial content
-  // - apply the 'textDocument/didChange' notifications in the order you
-  // 	 receive them.
-  // - apply the `TextDocumentContentChangeEvent`s in a single notification
-  //   in the order you receive them.
-  writeToInfluxDB(
-    "docChange",
-    JSON.stringify(event.contentChanges),
-    id.toString(),
-  );
-
-  // For megaphone
   if (event.contentChanges.length === 0) {
     megaphone.text = `$(megaphone) Document ${id} Save`;
-  }
-  event.contentChanges.forEach((change) => {
-    if (change && change.hasOwnProperty("text")) {
-      const { text, range } = change;
-      if (range.start.isEqual(range.end)) {
-        megaphone.text = `$(megaphone) Document ${id} Add: ${text}`;
-      } else if (text === "") {
-        megaphone.text = `$(megaphone) Document ${id} Delete`;
-      } else {
-        megaphone.text = `$(megaphone) Document ${id} Replace: ${text}`;
+    writeToInfluxDB("save", "", id.toString());
+  } else {
+    // For megaphone
+    event.contentChanges.forEach((change) => {
+      if (change && change.hasOwnProperty("text")) {
+        const { text, range } = change;
+        if (range.start.isEqual(range.end)) {
+          megaphone.text = `$(megaphone) Document ${id} Add: ${text}`;
+        } else if (text === "") {
+          megaphone.text = `$(megaphone) Document ${id} Delete`;
+        } else {
+          megaphone.text = `$(megaphone) Document ${id} Replace: ${text}`;
+        }
       }
-    }
-  });
+    });
+
+    // For dashboard
+    // To mirror the content of a document using change events use the following
+    // approach:
+    // - start with the same initial content
+    // - apply the 'textDocument/didChange' notifications in the order you
+    // 	 receive them.
+    // - apply the `TextDocumentContentChangeEvent`s in a single notification
+    //   in the order you receive them.
+    writeToInfluxDB(
+      "docChange",
+      JSON.stringify(event.contentChanges),
+      id.toString(),
+    );
+  }
 }
 
 export function activate(context: vscode.ExtensionContext) {
