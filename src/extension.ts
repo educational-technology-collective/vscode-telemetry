@@ -5,6 +5,8 @@ export function activate(context: vscode.ExtensionContext) {
   console.log('Extension "telemetry" is now active');
   console.log(`sessionId: ${vscode.env.sessionId}`);
 
+  // vscode.workspace.getConfiguration('telemetry')
+
   // create megaphone item on the status bar
   let megaphone = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,

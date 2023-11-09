@@ -16,12 +16,30 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "telemetry.helloWorld",
-        "title": "Hello World"
+    "configuration": {
+      "title": "Telemetry",
+      "properties": {
+        "telemetry.activeEvents.documentOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable logging of the document open event"
+        },
+        "telemetry.activeEvents.documentChange": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable logging of the document change event"
+        },
+        "telemetry.activeEvents.documentClose": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable logging of the document close event"
+        },
+        "telemetry.exporter": {
+          "type": "object",
+          "description": "Exporter settings"
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
