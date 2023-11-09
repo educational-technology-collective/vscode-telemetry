@@ -1,26 +1,9 @@
-# telemetry README
+# telemetry
+A tool designed to help you collect VS Code activity data effortlessly.
 
 ## Features
+The intention of this extension is to support data-driven research and design of new coding experiences with large numbers of users, and we use this extension within the educational technology collective lab to improve programming education with learning analytics.
 
 ## Requirements
 
 ## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-- `myExtension.enable`: Enable/disable this extension.
-- `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...

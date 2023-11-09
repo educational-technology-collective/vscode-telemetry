@@ -4,6 +4,7 @@
   "description": "",
   "version": "0.0.1",
   "repository": "https://github.com/educational-technology-collective/vscode-telemetry",
+  "publisher": "mengyanw",
   "engines": {
     "vscode": "^1.84.0"
   },
