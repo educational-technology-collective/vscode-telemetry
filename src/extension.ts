@@ -14,6 +14,7 @@ function sendDoc(
   document: vscode.TextDocument,
   megaphone?: vscode.StatusBarItem,
 ) {
+  if (!vscode.env.isTelemetryEnabled) return;
   if (document.uri.scheme === "output") {
     return; // To avoid logging output panel content
   }
@@ -35,6 +36,7 @@ function sendDocChange(
   event: vscode.TextDocumentChangeEvent,
   megaphone: vscode.StatusBarItem,
 ) {
+  if (!vscode.env.isTelemetryEnabled) return;
   if (event.document.uri.scheme === "output") {
     return; // To avoid logging output panel content
   }
@@ -85,7 +87,7 @@ export function activate(context: vscode.ExtensionContext) {
     100,
   );
   megaphone.text = `$(megaphone) telemetry extension is activated`;
-  megaphone.show();
+  vscode.env.isTelemetryEnabled ? megaphone.show() : megaphone.hide();
 
   // send all text document contents currently known to the editor
   vscode.workspace.textDocuments.forEach((doc) => sendDoc(doc));
@@ -96,6 +98,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidOpenTextDocument((doc) => sendDoc(doc, megaphone)),
     vscode.workspace.onDidChangeTextDocument(
       (e: vscode.TextDocumentChangeEvent) => sendDocChange(e, megaphone),
+    ),
+    vscode.env.onDidChangeTelemetryEnabled((e: boolean) =>
+      e ? megaphone.show() : megaphone.hide(),
     ),
   );
 }
