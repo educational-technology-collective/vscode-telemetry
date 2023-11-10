@@ -34,8 +34,26 @@
           "default": true,
           "description": "Enable/disable logging of the document close event"
         },
-        "telemetry.exporter": {
-          "type": "object",
+        "telemetry.exporters": {
+          "type": "array",
+          "default": [
+            {
+              "type": "console_exporter"
+            },
+            {
+              "type": "file_exporter",
+              "args": {
+                "path": "log"
+              }
+            },
+            {
+              "type": "remote_exporter",
+              "args": {
+                "id": "S3Exporter",
+                "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry"
+              }
+            }
+          ],
           "description": "Exporter settings"
         }
       }

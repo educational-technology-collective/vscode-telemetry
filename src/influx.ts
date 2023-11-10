@@ -5,7 +5,7 @@ import { org, token, url } from "./secrets";
 const bucket = "vs-dev";
 const influxDB = new InfluxDB({ url, token });
 
-export async function writeToInfluxDB(
+export function writeToInfluxDB(
   eventType: string,
   eventInfo: string,
   docId: string,
