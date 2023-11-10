@@ -5,7 +5,7 @@ import { sendEvent } from "./exporters";
 let nextId = 1;
 let uri2Id: { [key: string]: number } = {};
 
-function getId(uri: string) {
+function updateAndGetId(uri: string) {
   if (!uri2Id.hasOwnProperty(uri)) uri2Id[uri] = nextId++;
   return uri2Id[uri];
 }
@@ -14,16 +14,16 @@ export function handleDocumentOpen(
   document: vscode.TextDocument,
   megaphone?: vscode.StatusBarItem,
 ) {
-  const id = getId(document.uri.toString());
   if (
     !vscode.env.isTelemetryEnabled ||
     !vscode.workspace
       .getConfiguration("telemetry.activeEvents")
       .get("documentOpen") ||
-    document.uri.scheme === "output"
+    document.uri.scheme !== "file"
   ) {
     return;
   }
+  const id = updateAndGetId(document.uri.toString());
   const documentContent = document.getText();
 
   if (megaphone) {
@@ -48,16 +48,16 @@ export function handleDocumentChange(
   e: vscode.TextDocumentChangeEvent,
   megaphone: vscode.StatusBarItem,
 ) {
-  const id = getId(e.document.uri.toString());
   if (
     !vscode.env.isTelemetryEnabled ||
     !vscode.workspace
       .getConfiguration("telemetry.activeEvents")
       .get("documentChange") ||
-    e.document.uri.scheme === "output"
+    e.document.uri.scheme !== "file"
   ) {
     return;
   }
+  const id = updateAndGetId(e.document.uri.toString());
   if (e.contentChanges.length > 0) {
     // For megaphone
     e.contentChanges.forEach((change) => {
@@ -91,16 +91,16 @@ export function handleDocumentClose(
   document: vscode.TextDocument,
   megaphone: vscode.StatusBarItem,
 ) {
-  const id = getId(document.uri.toString());
   if (
     !vscode.env.isTelemetryEnabled ||
     !vscode.workspace
       .getConfiguration("telemetry.activeEvents")
       .get("documentClose") ||
-    document.uri.scheme === "output"
+    document.uri.scheme !== "file"
   ) {
     return;
   }
+  const id = updateAndGetId(document.uri.toString());
   megaphone.text = `$(megaphone) Document ${id} Close`;
   const event: EventData = {
     eventName: "documentClose",
