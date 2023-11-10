@@ -41,16 +41,21 @@
               "type": "console_exporter"
             },
             {
-              "type": "file_exporter",
+              "type": "remote_exporter",
               "args": {
-                "path": "log"
+                "id": "S3Exporter",
+                "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry"
               }
             },
             {
               "type": "remote_exporter",
               "args": {
-                "id": "S3Exporter",
-                "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry"
+                  "id": "InfluxDBLambdaExporter",
+                  "url": "https://68ltdi5iij.execute-api.us-east-1.amazonaws.com/influx-vscode",
+                  "params": {
+                      "influx_bucket": "telemetry_dev",
+                      "influx_measurement": "vscode"
+                  }
               }
             }
           ],

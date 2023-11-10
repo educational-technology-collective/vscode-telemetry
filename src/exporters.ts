@@ -5,10 +5,6 @@ function consoleExporter(data: EventData) {
   console.log(data);
 }
 
-// function fileExporter(data: EventData, args: ExporterArgs | undefined) {
-//     args && args.path && fs.writeFileSync(args.path, JSON.stringify(data));
-// }
-
 async function remoteExporter(data: EventData, args: ExporterArgs | undefined) {
   if (args && args.url) {
     const headers: Headers = new Headers();
@@ -18,7 +14,11 @@ async function remoteExporter(data: EventData, args: ExporterArgs | undefined) {
     const request = new Request(args.url, {
       method: "POST",
       headers: headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        data: data,
+        params: args.params,
+        env: args.env
+      }),
     });
     const response = await fetch(request);
 
@@ -37,7 +37,6 @@ export function sendEvent(data: EventData) {
     .get("exporters") as Array<Exporter>;
   exporters.forEach(async (exporter: Exporter) => {
     if (exporter.type === "console_exporter") consoleExporter(data);
-    // if (exporter.type === 'file_exporter') fileExporter(data, exporter.args)
     if (exporter.type === "remote_exporter") {
       const res = await remoteExporter(data, exporter.args);
       console.log(res);
