@@ -3,6 +3,7 @@ import {
   handleDocumentOpen,
   handleDocumentChange,
   handleDocumentClose,
+  handleDocumentSave,
 } from "./events";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -32,6 +33,9 @@ export function activate(context: vscode.ExtensionContext) {
     ),
     vscode.workspace.onDidCloseTextDocument((doc: vscode.TextDocument) =>
       handleDocumentClose(doc, megaphone),
+    ),
+    vscode.workspace.onDidSaveTextDocument((doc: vscode.TextDocument) =>
+      handleDocumentSave(doc, megaphone),
     ),
   );
   vscode.env.isTelemetryEnabled &&

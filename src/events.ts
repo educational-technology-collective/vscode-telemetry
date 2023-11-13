@@ -112,3 +112,29 @@ export function handleDocumentClose(
   };
   sendEvent(event);
 }
+
+export function handleDocumentSave(
+  document: vscode.TextDocument,
+  megaphone: vscode.StatusBarItem,
+) {
+  if (
+    !vscode.env.isTelemetryEnabled ||
+    !vscode.workspace
+      .getConfiguration("telemetry.activeEvents")
+      .get("documentSave") ||
+    document.uri.scheme !== "file"
+  ) {
+    return;
+  }
+  const id = updateAndGetId(document.uri.toString());
+  megaphone.text = `$(megaphone) Document ${id} Save`;
+  const event: EventData = {
+    eventName: "documentSave",
+    eventTime: Date.now(),
+    sessionId: vscode.env.sessionId,
+    machineId: vscode.env.machineId,
+    documentUri: document.uri.toString(),
+    documentId: id,
+  };
+  sendEvent(event);
+}
