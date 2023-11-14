@@ -46,6 +46,12 @@
               "type": "console_exporter"
             },
             {
+              "type": "file_exporter",
+              "args": {
+                "path": "log.json"
+              }
+            },
+            {
               "type": "remote_exporter",
               "args": {
                 "id": "S3Exporter",
@@ -55,12 +61,12 @@
             {
               "type": "remote_exporter",
               "args": {
-                  "id": "InfluxDBLambdaExporter",
-                  "url": "https://68ltdi5iij.execute-api.us-east-1.amazonaws.com/influx-vscode",
-                  "params": {
-                      "influx_bucket": "telemetry_dev",
-                      "influx_measurement": "vscode"
-                  }
+                "id": "InfluxDBLambdaExporter",
+                "url": "https://68ltdi5iij.execute-api.us-east-1.amazonaws.com/influx-vscode",
+                "params": {
+                  "influx_bucket": "telemetry_dev",
+                  "influx_measurement": "vscode"
+                }
               }
             }
           ],
