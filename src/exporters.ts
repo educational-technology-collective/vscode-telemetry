@@ -13,7 +13,6 @@ async function fileExporter(data: EventData, args: ExporterArgs | undefined) {
 
     const folderUri = vscode.workspace.workspaceFolders[0].uri;
     const fileUri = posix.join(folderUri.path, args.path);
-    // VS code extension only support writing to relative path.
 
     if (fileUri.toString() !== vscode.Uri.parse(data.documentUri).path) {
       try {

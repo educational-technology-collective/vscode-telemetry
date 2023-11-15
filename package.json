@@ -46,19 +46,6 @@
               "type": "console_exporter"
             },
             {
-              "type": "file_exporter",
-              "args": {
-                "path": "log.json"
-              }
-            },
-            {
-              "type": "remote_exporter",
-              "args": {
-                "id": "S3Exporter",
-                "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry"
-              }
-            },
-            {
               "type": "remote_exporter",
               "args": {
                 "id": "InfluxDBLambdaExporter",
