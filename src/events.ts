@@ -12,7 +12,6 @@ function updateAndGetId(uri: string) {
 
 export function handleDocumentOpen(
   document: vscode.TextDocument,
-  megaphone?: vscode.StatusBarItem,
 ) {
   if (
     !vscode.env.isTelemetryEnabled ||
@@ -25,12 +24,6 @@ export function handleDocumentOpen(
   }
   const id = updateAndGetId(document.uri.toString());
   const documentContent = document.getText();
-
-  if (megaphone) {
-    megaphone.text = `$(megaphone) Document ${id} (${
-      document.fileName
-    }) Open: ${documentContent.split("\n")[0]}`;
-  }
 
   const event: EventData = {
     eventName: "documentOpen",
@@ -46,7 +39,6 @@ export function handleDocumentOpen(
 
 export function handleDocumentChange(
   e: vscode.TextDocumentChangeEvent,
-  megaphone: vscode.StatusBarItem,
 ) {
   if (
     !vscode.env.isTelemetryEnabled ||
@@ -59,21 +51,6 @@ export function handleDocumentChange(
   }
   const id = updateAndGetId(e.document.uri.toString());
   if (e.contentChanges.length > 0) {
-    // For megaphone
-    e.contentChanges.forEach((change) => {
-      if (change && change.hasOwnProperty("text")) {
-        const { text, range } = change;
-        if (range.start.isEqual(range.end)) {
-          megaphone.text = `$(megaphone) Document ${id} Add: ${text}`;
-        } else if (text === "") {
-          megaphone.text = `$(megaphone) Document ${id} Delete`;
-        } else {
-          megaphone.text = `$(megaphone) Document ${id} Replace: ${text}`;
-        }
-      }
-    });
-
-    // For dashboard
     const event: EventData = {
       eventName: "documentChange",
       eventTime: Date.now(),
@@ -89,7 +66,6 @@ export function handleDocumentChange(
 
 export function handleDocumentClose(
   document: vscode.TextDocument,
-  megaphone: vscode.StatusBarItem,
 ) {
   if (
     !vscode.env.isTelemetryEnabled ||
@@ -101,7 +77,6 @@ export function handleDocumentClose(
     return;
   }
   const id = updateAndGetId(document.uri.toString());
-  megaphone.text = `$(megaphone) Document ${id} Close`;
   const event: EventData = {
     eventName: "documentClose",
     eventTime: Date.now(),
@@ -115,7 +90,6 @@ export function handleDocumentClose(
 
 export function handleDocumentSave(
   document: vscode.TextDocument,
-  megaphone: vscode.StatusBarItem,
 ) {
   if (
     !vscode.env.isTelemetryEnabled ||
@@ -127,7 +101,6 @@ export function handleDocumentSave(
     return;
   }
   const id = updateAndGetId(document.uri.toString());
-  megaphone.text = `$(megaphone) Document ${id} Save`;
   const event: EventData = {
     eventName: "documentSave",
     eventTime: Date.now(),
