@@ -57,21 +57,14 @@ async function remoteExporter(data: EventData, args: ExporterArgs | undefined) {
     };
   }
 }
-export async function sendEvent(data: EventData) {
-  const exporters = vscode.workspace
-    .getConfiguration("telemetry")
-    .get("exporters") as Array<Exporter>;
-  const results: any = [];
-  await exporters.forEach(async (exporter: Exporter) => {
-    if (exporter.type === "console_exporter") consoleExporter(data);
-    if (exporter.type === "file_exporter") {
-      const response = await fileExporter(data, exporter.args);
-      results.push(response);
-    }
-    if (exporter.type === "remote_exporter") {
-      const response = await remoteExporter(data, exporter.args);
-      results.push(response);
-    }
-  });
-  console.log(results);
+export async function publishEvent(data: EventData, exporter: Exporter) {
+  if (exporter.type === "console_exporter") consoleExporter(data);
+  if (exporter.type === "file_exporter") {
+    const response = await fileExporter(data, exporter.args);
+    console.log(response);
+  }
+  if (exporter.type === "remote_exporter") {
+    const response = await remoteExporter(data, exporter.args);
+    console.log(response);
+  }
 }

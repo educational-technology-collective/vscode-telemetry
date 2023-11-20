@@ -3,6 +3,8 @@ export interface ActiveEvent {
    * Name of the active event (the static id associate with the event class)
    */
   name: string;
+
+  logWholeDocument: boolean;
 }
 export interface ExporterArgs {
   /**

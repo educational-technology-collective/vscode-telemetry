@@ -19,25 +19,27 @@
     "configuration": {
       "title": "Telemetry",
       "properties": {
-        "telemetry.activeEvents.documentOpen": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable logging of the document open event"
-        },
-        "telemetry.activeEvents.documentChange": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable logging of the document change event"
-        },
-        "telemetry.activeEvents.documentClose": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable logging of the document close event"
-        },
-        "telemetry.activeEvents.documentSave": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable logging of the document save event"
+        "telemetry.activeEvents": {
+          "type": "array",
+          "default": [
+            {
+              "name": "DocumentOpenEvent",
+              "logWholeDocument": true
+            },
+            {
+              "name": "DocumentChangeEvent",
+              "logWholeDocument": false
+            },
+            {
+              "name": "DocumentCloseEvent",
+              "logWholeDocument": false
+            },
+            {
+              "name": "DocumentSaveEvent",
+              "logWholeDocument": false
+            }
+          ],
+          "description": "Active events settings"
         },
         "telemetry.exporters": {
           "type": "array",
@@ -54,7 +56,13 @@
                   "influx_bucket": "telemetry_dev",
                   "influx_measurement": "vscode"
                 }
-              }
+              },
+              "activeEvents": [
+                {
+                  "name": "DocumentChangeEvent",
+                  "logWholeNotebook": false
+                }
+              ]
             }
           ],
           "description": "Exporter settings"
