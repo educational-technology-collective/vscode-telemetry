@@ -26,7 +26,7 @@ export interface ExporterArgs {
   /**
    * Environment variables to pass to the http endpoint (optional for remote exporter)
    */
-  env?: Object[];
+  env?: String[];
 }
 
 export interface Exporter {

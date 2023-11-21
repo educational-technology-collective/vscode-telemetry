@@ -31,7 +31,7 @@ export class DocumentOpenEventProducer {
 
       if (
         exporter.activeEvents?.find(
-          (o) => o.name == DocumentOpenEventProducer.id,
+          (o) => o.name === DocumentOpenEventProducer.id,
         )?.logWholeDocument
       ) {
         event["documentContent"] = document.getText();
@@ -72,7 +72,7 @@ export class DocumentChangeEventProducer {
             };
             if (
               exporter.activeEvents?.find(
-                (o) => o.name == DocumentChangeEventProducer.id,
+                (o) => o.name === DocumentChangeEventProducer.id,
               )?.logWholeDocument
             ) {
               event["documentContent"] = e.document.getText();
@@ -109,7 +109,7 @@ export class DocumentCloseEventProducer {
           };
           if (
             exporter.activeEvents?.find(
-              (o) => o.name == DocumentCloseEventProducer.id,
+              (o) => o.name === DocumentCloseEventProducer.id,
             )?.logWholeDocument
           ) {
             event["documentContent"] = document.getText();
@@ -145,7 +145,7 @@ export class DocumentSaveEventProducer {
           };
           if (
             exporter.activeEvents?.find(
-              (o) => o.name == DocumentSaveEventProducer.id,
+              (o) => o.name === DocumentSaveEventProducer.id,
             )?.logWholeDocument
           ) {
             event["documentContent"] = document.getText();

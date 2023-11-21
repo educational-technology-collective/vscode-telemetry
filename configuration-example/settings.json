@@ -24,7 +24,15 @@
     {
       "type": "remote_exporter",
       "args": {
-        "id": "InfluxDBLambdaExporter",
+        "id": "S3",
+        "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry",
+        "env": ["{$env:WORKSPACE_ID}"]
+      }
+    },
+    {
+      "type": "remote_exporter",
+      "args": {
+        "id": "InfluxDB",
         "url": "https://68ltdi5iij.execute-api.us-east-1.amazonaws.com/influx-vscode",
         "params": {
           "influx_bucket": "telemetry_dev",
@@ -33,8 +41,12 @@
       },
       "activeEvents": [
         {
+          "name": "DocumentOpenEvent",
+          "logWholeDocument": true
+        },
+        {
           "name": "DocumentChangeEvent",
-          "logWholeNotebook": false
+          "logWholeDocument": false
         }
       ]
     }

@@ -58,7 +58,9 @@ async function remoteExporter(data: EventData, args: ExporterArgs | undefined) {
   }
 }
 export async function publishEvent(data: EventData, exporter: Exporter) {
-  if (exporter.type === "console_exporter") consoleExporter(data);
+  if (exporter.type === "console_exporter") {
+    consoleExporter(data);
+  }
   if (exporter.type === "file_exporter") {
     const response = await fileExporter(data, exporter.args);
     console.log(response);

@@ -3,12 +3,6 @@ import { producerCollection } from "./producer";
 import { ActiveEvent, Exporter } from "./types";
 
 export function activate(context: vscode.ExtensionContext) {
-  vscode.env.isTelemetryEnabled
-    ? console.log('Extension "telemetry" is now active')
-    : console.log("telemetry is disabled");
-
-  console.log(vscode.workspace.getConfiguration("telemetry"));
-
   const activeEvents: ActiveEvent[] | undefined = vscode.workspace
     .getConfiguration("telemetry")
     .get("activeEvents");
@@ -29,7 +23,24 @@ export function activate(context: vscode.ExtensionContext) {
       : exporters?.filter((e) => e.activeEvents && e.activeEvents.length);
   // Exporters without specifying the corresponding activeEvents will use the global activeEvents configuration.
   // When the global activeEvents configuration is null, exporters that do not have corresponding activeEvents will be ignored.
-  console.log(processedExporters);
+
+  const exporterIds = processedExporters
+    ?.flatMap((each) => each.args?.id)
+    .filter((e) => e !== undefined);
+  vscode.env.isTelemetryEnabled
+    ? vscode.window.showInformationMessage(
+        `Telemetry data logging to ${exporterIds?.join(" & ")}.`,
+      )
+    : console.log("Telemetry extension is disabled");
+  vscode.env.onDidChangeTelemetryEnabled((e: boolean) =>
+    e
+      ? vscode.window.showInformationMessage(
+          `Telemetry data logging to ${exporterIds?.join(" & ")}.`,
+        )
+      : vscode.window.showInformationMessage(
+          "Telemetry extension is disabled.",
+        ),
+  );
 
   processedExporters?.forEach((exporter) => {
     producerCollection.forEach((producer) => {
