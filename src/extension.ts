@@ -42,8 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
         ),
   );
 
-  vscode.workspace.onCommand
-
   processedExporters?.forEach((exporter) => {
     producerCollection.forEach((producer) => {
       if (exporter.activeEvents?.map((o) => o.name).includes(producer.id)) {
