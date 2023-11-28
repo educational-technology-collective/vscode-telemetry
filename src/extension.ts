@@ -29,18 +29,20 @@ export function activate(context: vscode.ExtensionContext) {
     .filter((e) => e !== undefined);
   vscode.env.isTelemetryEnabled
     ? vscode.window.showInformationMessage(
-        `Telemetry data logging to ${exporterIds?.join(" & ")}.`,
+        `Telemetry data is being logged ${exporterIds?.join(" & ")}.`,
       )
     : console.log("Telemetry extension is disabled");
   vscode.env.onDidChangeTelemetryEnabled((e: boolean) =>
     e
       ? vscode.window.showInformationMessage(
-          `Telemetry data logging to ${exporterIds?.join(" & ")}.`,
+          `Telemetry data is being logged to ${exporterIds?.join(" & ")}.`,
         )
       : vscode.window.showInformationMessage(
           "Telemetry extension is disabled.",
         ),
   );
+
+  vscode.workspace.onCommand
 
   processedExporters?.forEach((exporter) => {
     producerCollection.forEach((producer) => {

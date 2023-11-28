@@ -3,7 +3,9 @@ export interface ActiveEvent {
    * Name of the active event (the static id associate with the event class)
    */
   name: string;
-
+  /**
+   * Whether to log the whole document or not when the event is triggered
+   */
   logWholeDocument: boolean;
 }
 export interface ExporterArgs {
