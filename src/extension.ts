@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
   // When the global activeEvents configuration is null, exporters that do not have corresponding activeEvents will be ignored.
 
   const exporterIds = processedExporters
-    ?.flatMap((each) => each.args?.id)
+    ?.map((each) => each.args?.id)
     .filter((e) => e !== undefined);
   vscode.env.isTelemetryEnabled
     ? vscode.window.showInformationMessage(
