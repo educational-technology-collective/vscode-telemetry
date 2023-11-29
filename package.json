@@ -2,7 +2,7 @@
   "name": "telemetry",
   "displayName": "Telemetry",
   "description": "",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "repository": "https://github.com/educational-technology-collective/vscode-telemetry",
   "publisher": "educational-technology-collective",
   "engines": {
