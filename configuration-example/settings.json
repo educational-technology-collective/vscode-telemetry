@@ -22,6 +22,13 @@
       "type": "console_exporter"
     },
     {
+      "type": "file_exporter",
+      "args": {
+        "id": "LocalFile",
+        "path": "telemetry.log",
+      }
+    },
+    {
       "type": "remote_exporter",
       "args": {
         "id": "S3",
