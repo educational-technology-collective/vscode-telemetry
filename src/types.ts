@@ -66,6 +66,13 @@ export interface EventData {
   machineId: string;
   documentUri: string;
   documentId: number;
+  operation: string;
+  value?: string;
+  rangeOffset: string;
+  rangeLength: string;
+  rangestart_line: string;
+  rangestart_character: string;
+  rangeend_line: string;
+  rangeend_character: string;
   documentContent?: string;
-  documentChanges?: string;
 }

@@ -25,7 +25,7 @@
       "type": "file_exporter",
       "args": {
         "id": "LocalFile",
-        "path": "telemetry.log",
+        "path": "telemetry.log"
       }
     },
     {
@@ -35,7 +35,7 @@
         "url": "https://telemetry.mentoracademy.org/telemetry-edtech-labs-si-umich-edu/dev/test-telemetry",
         "env": {
           "WORKSPACE_ID": "dev"
-        } 
+        }
       }
     },
     {
