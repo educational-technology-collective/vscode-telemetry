@@ -2,77 +2,78 @@ export interface ActiveEvent {
   /**
    * Name of the active event (the static id associate with the event class)
    */
-  name: string;
+  name: string
   /**
    * Whether to log the whole document or not when the event is triggered
    */
-  logWholeDocument: boolean;
+  logWholeDocument: boolean
 }
 export interface ExporterArgs {
   /**
    * Exporter ID
    */
-  id: string;
+  id: string
   /**
    * Local file path (required for file exporter)
    */
-  path?: string;
+  path?: string
   /**
    * Http endpoint (required for remote exporter)
    */
-  url?: string;
+  url?: string
   /**
    * Additional parameters to pass to the http endpoint (optional for remote exporter)
    */
-  params?: Object;
+  params?: Object
   /**
    * Environment variables to pass to the http endpoint (optional for remote exporter)
    */
-  env?: Object;
+  env?: Object
 }
 
 export interface Exporter {
   /**
    * Exporter type, should be one of "console_exporter", "command_line_exporter", "file_exporter", "remote_exporter" or "custom_exporter"
    */
-  type: string;
+  type: string
   /**
    * Arguments to pass to the exporter function
    */
-  args?: ExporterArgs;
+  args?: ExporterArgs
   /**
    * An array of active events defined inside of individual exporters. It overrides the global activeEvents configuration defined in the configuration file.
    * The extension would only generate and export data for valid events ( 1. that have an id associated with the event class, 2. the event name is included in activeEvents ).
    * The extension will export the entire notebook content only for valid events when the logWholeNotebook flag is True.
    */
-  activeEvents?: ActiveEvent[];
+  activeEvents?: ActiveEvent[]
 }
 
 export interface Config {
   /**
    * An array of active events
    */
-  activeEvents: ActiveEvent[];
+  activeEvents: ActiveEvent[]
   /**
    * An array of exporters
    */
-  exporters: Exporter[];
+  exporters: Exporter[]
 }
 
 export interface EventData {
-  eventName: string;
-  eventTime: number;
-  sessionId: string;
-  machineId: string;
-  documentUri: string;
-  documentId: number;
-  operation: string;
-  value?: string;
-  rangeOffset: string;
-  rangeLength: string;
-  rangestart_line: string;
-  rangestart_character: string;
-  rangeend_line: string;
-  rangeend_character: string;
-  documentContent?: string;
+  eventName: string
+  eventTime: number
+  sessionId: string
+  machineId: string
+  documentUri: string
+  documentId: number
+  operation: string
+  value?: string
+  rangeOffset: string
+  rangeLength: string
+  rangestart_line: string
+  rangestart_character: string
+  rangeend_line: string
+  rangeend_character: string
+  documentContent?: string
+  documentLanguageId: string
 }
